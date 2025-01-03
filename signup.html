@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: aqua;
+            display: flex;
+            justify-content: center;
+            margin-top:9%;
+        
+        }
+        h1{
+           color:rgb(235, 179, 27);
+             display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15%;
+    
+        }
+        div{
+            border:2px solid  gray;
+            background-color: antiquewhite;
+            width:500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+        
+        }
+        input{
+            height: 25px;
+            width:400px
+        }
+        label{
+            font-size: 20px;
+        }
+        button{
+            background-color: blue;
+            color:white
+        }
+        .h{
+            color:blue;
+            font-family:"Roboto";
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        
+    <h1>SIGN UP PAGE</h1>
+    <label for="name"> Username:</label>
+    <input type="text" name="username" id="name" placeholder="enter username">
+    <br>
+    <label for="email">Email id:</label>
+    <input type="email" name="email" id="email" placeholder="enter email">
+    <br>
+    <label for="pass"> Password:</label>
+    <input type="password" name="password" id="pass" placeholder="enter password">
+    <br>
+   
+    <button onclick="handle_sign()">sign up</button>
+    <hr>
+    <p>already have an account goto login page<a href="./login.html"> LOGIN PAGE</a></p>
+   </div>
+    <script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Water Reminder</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container text-center">
+    <h2>Water Reminder App</h2>
+    <form id="reminderForm">
+      <div class="mb-3">
+        <label for="wakeUpTime" class="form-label">Wake-up Time</label>
+        <input type="time" class="form-control" id="wakeUpTime" required>
+      </div>
+      <div class="mb-3">
+        <label for="sleepTime" class="form-label">Sleep Time</label>
+        <input type="time" class="form-control" id="sleepTime" required>
+      </div>
+      <div class="mb-3">
+        <label for="totalWater" class="form-label">Total Water (Liters)</label>
+        <input type="number" step="0.1" class="form-control" id="totalWater" value="2" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Start Reminders</button>
+    </form>
+    <div id="status" class="mt-4"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js">
+   document.getElementById("reminderForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    // Get user inputs
+    const wakeUpTime = document.getElementById("wakeUpTime").value;
+    const sleepTime = document.getElementById("sleepTime").value;
+    const totalWater = parseFloat(document.getElementById("totalWater").value);
+    const statusDiv = document.getElementById("status");
+
+    // Validate inputs
+    if (!wakeUpTime || !sleepTime || isNaN(totalWater) || totalWater <= 0) {
+        alert("Please provide valid inputs.");
+        return;
+    }
+
+    // Parse wake-up and sleep times
+    const [wakeHours, wakeMinutes] = wakeUpTime.split(":").map(Number);
+    const [sleepHours, sleepMinutes] = sleepTime.split(":").map(Number);
+
+    const wakeDate = new Date();
+    wakeDate.setHours(wakeHours, wakeMinutes, 0, 0);
+
+    const sleepDate = new Date();
+    sleepDate.setHours(sleepHours, sleepMinutes, 0, 0);
+
+    if (sleepDate <= wakeDate) {
+        sleepDate.setDate(sleepDate.getDate() + 1); // Handle overnight sleep times
+    }
+
+    // Calculate the duration between wake-up and sleep time
+    const durationInHours = (sleepDate - wakeDate) / (1000 * 60 * 60);
+
+    // Calculate reminders
+    const intervalHours = durationInHours / totalWater;
+    const intervalMillis = intervalHours * 60 * 60 * 1000;
+    const reminders = [];
+    let nextReminder = new Date(wakeDate);
+
+    while (nextReminder < sleepDate) {
+        reminders.push(new Date(nextReminder));
+        nextReminder = new Date(nextReminder.getTime() + intervalMillis);
+    }
+
+    // Schedule reminders
+    reminders.forEach((reminder, index) => {
+        const delay = reminder - Date.now();
+        if (delay > 0) {
+            setTimeout(() => {
+                alert(`Reminder ${index + 1}: Time to drink ${(totalWater / reminders.length).toFixed(2)} liters of water! 💧`);
+            }, delay);
+        }
+    });
+
+    // Display status
+    statusDiv.innerHTML = `
+        <p class="text-success">Scheduled ${reminders.length} reminders to drink ${(totalWater / reminders.length).toFixed(2)} liters each.</p>
+    `;
+});
+
+
+
+  </script>
+</body>
+</html>
